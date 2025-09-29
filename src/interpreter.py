@@ -2,6 +2,7 @@ from parser import *
 from datetime import date
 import argparse
 from models import Task
+from plot import Plot
 from helpers import *
 
 # Constant
@@ -251,7 +252,8 @@ class Interpreter:
         return False, None, None
 
     def draw(self):
-        pass
+        plot = Plot(self.tasks.values())
+        plot.draw()
 
 
 # =========== Helper functions ===========
