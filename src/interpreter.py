@@ -16,22 +16,22 @@ WEEK_DAY = [
     "Sunday",
 ]
 
-# This store all tasks times to specific format, for handle conflicts.
-reserved = {
-    "saturday": [],
-    "sunday": [],
-    "monday": [],
-    "tuesday": [],
-    "wednesday": [],
-    "thursday": [],
-    "friday": [],
-}
-
 
 class Interpreter:
     def __init__(self):
         # Key: task name, Value: task model
         self.tasks = {}
+
+        # This store all tasks times to specific format, for handle conflicts.
+        self.reserved = {
+            "saturday": [],
+            "sunday": [],
+            "monday": [],
+            "tuesday": [],
+            "wednesday": [],
+            "thursday": [],
+            "friday": [],
+        }
 
     def execute(self, statement):
         if isinstance(statement, TaskSt):
@@ -196,36 +196,36 @@ class Interpreter:
             e = convert_time_to_minute(task.end)
             if in_tomorrow:
                 # fill today
-                reserved[d.lower()].append([s, 1440, task.name])  # 1440 = 24*60
+                self.reserved[d.lower()].append([s, 1440, task.name])  # 1440 = 24*60
                 # fill tomorrow
-                reserved[
+                self.reserved[
                     WEEK_DAY[
                         (WEEK_DAY.index(d.capitalize()) + 1) % len(WEEK_DAY)
                     ].lower()
                 ].append([0, e, task.name])
             else:
-                reserved[d.lower()].append([s, e, task.name])
+                self.reserved[d.lower()].append([s, e, task.name])
 
     def clear_reserved(self, task: Task):
         in_tomorrow = end_is_on_tomorrow(task.start, task.end)
         for d in task.days:
             # remove from day of start task
-            for r in reserved[d.lower()]:
+            for r in self.reserved[d.lower()]:
                 if r[2] == task.name:
-                    reserved[d.lower()].remove(r)
+                    self.reserved[d.lower()].remove(r)
             if in_tomorrow:
                 tomorrow = WEEK_DAY[
                     (WEEK_DAY.index(d.capitalize()) + 1) % len(WEEK_DAY)
                 ].lower()
-                for r in reserved[tomorrow]:
+                for r in self.reserved[tomorrow]:
                     if r[2] == task.name:
-                        reserved[tomorrow].remove(r)
+                        self.reserved[tomorrow].remove(r)
 
     def check_conflict(self, new_task: Task):
         in_tomorrow = end_is_on_tomorrow(new_task.start, new_task.end)
 
         for d in new_task.days:
-            for r in reserved[d.lower()]:
+            for r in self.reserved[d.lower()]:
                 s = convert_time_to_minute(new_task.start)
                 e = convert_time_to_minute(new_task.end)
                 if in_tomorrow:
@@ -236,7 +236,7 @@ class Interpreter:
                         return (True, d, r)
 
                 if in_tomorrow:
-                    for r in reserved[
+                    for r in self.reserved[
                         WEEK_DAY[
                             (WEEK_DAY.index(d.capitalize()) + 1) % len(WEEK_DAY)
                         ].lower()
