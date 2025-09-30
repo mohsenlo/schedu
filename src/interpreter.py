@@ -177,7 +177,7 @@ class Interpreter:
 
     def validate_time(self, time: str):
         h, m = split_time(time)
-        if 0 > int(h) > 23 or 0 > int(m) > 59:
+        if 0 > int(h) or int(h) > 23 or 0 > int(m) or int(m) > 59:
             raise RuntimeError(f"Time is invalid!!! got {time}")
 
     def get_task_in_days(self, days: list[str]) -> list[Task]:
