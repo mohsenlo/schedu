@@ -157,7 +157,7 @@ class Interpreter:
         m3 = m1 + m2
         mr = m3 % 60  # result minute
         hr = (h1 + h2 + int(m3 / 60)) % 24  # result hour
-        end = str(hr) + ":" + str(mr)
+        end = f"{hr:02d}:{mr:02d}"
         self.validate_time(end)
         return end
 
