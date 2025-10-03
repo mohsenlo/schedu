@@ -4,6 +4,7 @@ import argparse
 from models import Task
 from plot import Plot
 from helpers import *
+from copy import deepcopy
 
 # Constant
 WEEK_DAY = [
@@ -63,6 +64,8 @@ class Interpreter:
         * Update time and day together"""
         # Check task is exists?
         task = self.tasks.get(task_stmt.name)
+        old_task = deepcopy(task)
+
         if task is None:
             raise SystemError(f"Task {task_stmt.name} is not defined!!!")
 
@@ -79,7 +82,7 @@ class Interpreter:
             task.days = task_stmt.days
 
         # update reserved, if task wasn't valid, it will raise error
-        self.clear_reserved(task)
+        self.clear_reserved(old_task)
         if self.validate_task(task, True):
             self.fill_reserved(task)
 
