@@ -58,3 +58,25 @@ Schedu provides a DSL for defining tasks and simple scheduling rules, helping yo
   ```bash
   python .\src\interpreter.py
   ```
+
+#### Usage examples
+
+- Define a task:
+
+  ```bash
+  task "your Task" from 14:00 to 16:00 in saturday
+  # or 
+  task "your Task" from 14:00 to 16:00 in saturday and monday
+  ```
+
+- for rename a task:
+
+  ```bash
+  rename task "your task" to "new task name"
+  ```
+
+- after adding your tasks you can view the weekly plans at any time with following command:
+
+  ```bash
+  draw
+  ```
